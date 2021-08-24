@@ -2,16 +2,17 @@ import { Schema, model, Document } from 'mongoose';
 
 import * as bcrypt from "bcryptjs";
 
-interface IFisherman extends Document {
+interface IUser extends Document {
     name: string,
     email: string,
-    telephone: string,
+    phone: string,
     password: string,
     state: string,
-    city: string
+    city: string,
+    admin: boolean
 }
 
-const fishermanSchema = new Schema<IFisherman>({
+const userSchema = new Schema<IUser>({
     name: {
         type: String,
         required: true,
@@ -23,7 +24,7 @@ const fishermanSchema = new Schema<IFisherman>({
         unique: true,
         trim: true
     },
-    telephone: {
+    phone: {
         type: String,
         required: true,
         unique: true,
@@ -44,13 +45,18 @@ const fishermanSchema = new Schema<IFisherman>({
         type: String,
         required: true,
         trim: true
+    },
+    admin: {
+        type: Boolean,
+        required: true,
+        trim: true
     }
 });
 
-fishermanSchema.pre<IFisherman>('save', async function (next) {
-    const fisherman = this;
+userSchema.pre<IUser>('save', async function (next) {
+    const user = this;
 
-    if (!fisherman.isModified("password")) return next();
+    if (!user.isModified("password")) return next();
 
     const salt = await bcrypt.genSalt(10);
 
@@ -61,4 +67,4 @@ fishermanSchema.pre<IFisherman>('save', async function (next) {
     next();
 });
 
-export default model<IFisherman>('Fisherman', fishermanSchema);
+export default model<IUser>('User', userSchema);

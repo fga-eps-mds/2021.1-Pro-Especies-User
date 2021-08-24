@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
-import Fisherman from "../models/fishermanModel";
+import User from "../models/userModel";
 
-export default class FishermanController {
-    createFisherman = async (req: Request, res: Response) => {
+export default class UserController {
+    createUser = async (req: Request, res: Response) => {
         try {
-            console.log(req.body);
-            const fisherman = await Fisherman.create(req.body);
+            const user = await User.create(req.body);
             res.status(200).json(req.body);
         } catch (error) {
             console.log(error);
@@ -15,11 +14,11 @@ export default class FishermanController {
         }
     }
 
-    getAllFisherman = async (req: Request, res: Response) => {
+    getAllUser = async (req: Request, res: Response) => {
         try {
-            const data = await Fisherman.find(
+            const data = await User.find(
                 {},
-                "name email password state city telephone"
+                "name email state city phone admin"
             );
             res.status(200).json(data);
         } catch (error) {

@@ -1,9 +1,9 @@
 import { Router } from 'express';
 // Rotas
-import fishermanRoutes from './fishermanRoutes';
+import userRoutes from './userRoutes';
 
 const router = Router();
 
-router.use('/fisherman', fishermanRoutes);
+router.use('/user', userRoutes);
 
 export default router;
