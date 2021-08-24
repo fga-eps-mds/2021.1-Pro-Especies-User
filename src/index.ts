@@ -1,7 +1,6 @@
 import express from 'express';
 import databaseConnect from './config/database';
 import router from "./routes/router";
-import cors from 'cors';
 
 require('dotenv').config();
 
@@ -12,7 +11,6 @@ databaseConnect();
 
 app.use(express.json());
 
-app.use(cors());
 
 app.use(router);
 
