@@ -61,4 +61,4 @@ fishermanSchema.pre<IFisherman>('save', async function (next) {
     next();
 });
 
-export default model<IFisherman>('fisherman', fishermanSchema);
+export default model<IFisherman>('Fisherman', fishermanSchema);
