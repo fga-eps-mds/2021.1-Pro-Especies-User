@@ -23,5 +23,6 @@ services:
       - ./fishData:/data/db
     environment:
       - MONGO_INITDB_DATABASE=Fish
+      - DATABASE_URL=mongodb://db/fish
     ports:
-      - 27017:2017
+      - 27017:27017
