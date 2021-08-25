@@ -4,17 +4,28 @@ import User from "../models/userModel";
 export default class UserController {
     createUser = async (req: Request, res: Response) => {
         try {
-            const user = await User.create(req.body);
+            await User.create(req.body);
             res.status(200).json(req.body);
         } catch (error) {
-            console.log(error);
-            res.status(400).json({
-                message: "Falha ao criar usuário!",
-            });
+            const {email, phone} = await req.body;
+            if (await User.findOne({ email })) {
+                return res.status(409).json({
+                    message: "Email já cadastrado!",
+                });
+            } else if(await User.findOne({ phone })){
+                return res.status(409).json({
+                    message: "Número de telefone já cadastrado!",
+                });
+            } 
+            else {
+                return res.status(400).json({
+                    message: "Falha no sistema ao cadastrar, tente novamente!",
+                });
+            }
         }
     }
 
-    getAllUser = async (req: Request, res: Response) => {
+    getAllUsers = async (req: Request, res: Response) => {
         try {
             const data = await User.find(
                 {},

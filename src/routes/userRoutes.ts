@@ -10,7 +10,7 @@ userRoutes.post('/', (req: Request, res: Response) => {
 });
 
 userRoutes.get('/', (req: Request, res: Response) => {
-    userController.getAllUser(req, res);
+    userController.getAllUsers(req, res);
 });
 
 export default userRoutes;
