@@ -69,7 +69,7 @@ export default class UserController {
                 password: user.password,
               });
 
-              return res.status(200).json({ message: "Login efetuado com sucesso" , token: token});
+              return res.status(200).json({ name: user.name, email: user.email, phone: user.phone , token: token,});
         } catch (error) {
             return res.status(400).json({ message: "Falha no sistema ao logar, tente novamente!" });
         }
