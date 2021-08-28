@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../models/userModel';
+import AuthUser from '../middleware/authUser';
 
 export default class UserController {
   createUser = async (req: Request, res: Response) => {
@@ -39,7 +40,7 @@ export default class UserController {
 
   login = async (req: Request, res: Response) => {
     const { emailPhone, password } = req.body;
-
+    const authenticateUser = new AuthUser();
     try {
       const user =
         (await User.findOne({ email: emailPhone }).select('+password')) ||
@@ -53,8 +54,18 @@ export default class UserController {
       if (!(await bcrypt.compare(password, user!.password))) {
         return res.status(401).json({ message: 'Senha inválida' });
       }
+      const token = await authenticateUser.generateToken({
+        email: user.email,
+        password: user.password,
+      });
 
-      return res.status(200).json({ message: 'Login efetuado com sucesso' });
+      return res.status(200).json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        token,
+      });
     } catch (error) {
       return res
         .status(400)
