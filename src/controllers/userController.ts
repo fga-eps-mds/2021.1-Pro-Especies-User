@@ -6,15 +6,7 @@ import AuthUser from "../middleware/authUser";
 export default class UserController {
     createUser = async (req: Request, res: Response) => {
         try {
-             await User.create(req.body);
-            // const token = jwt.sign(
-            //     { user_id: user._id, email },
-            //     process.env.TOKEN_KEY,
-            //     {
-            //       expiresIn: "2h",
-            //     }
-            //   );
-            // user.token = token;
+            await User.create(req.body);
             res.status(200).json(req.body);
             
         } catch (error) {
