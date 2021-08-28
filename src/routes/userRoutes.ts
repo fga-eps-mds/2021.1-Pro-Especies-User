@@ -17,4 +17,5 @@ userRoutes.post('/login', (req: Request, res: Response) => {
     userController.login(req, res);
 });
 
+
 export default userRoutes;
