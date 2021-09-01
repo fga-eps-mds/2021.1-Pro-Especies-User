@@ -2,5 +2,7 @@ import jwt from 'jsonwebtoken';
 
 export default class AuthUser {
   generateToken = async (data: object) =>
-    jwt.sign(data, 'secret', { expiresIn: '1d' });
+    jwt.sign(data, process.env.AUTH_CONFIG_SECRET as string, {
+      expiresIn: '1d',
+    });
 }
