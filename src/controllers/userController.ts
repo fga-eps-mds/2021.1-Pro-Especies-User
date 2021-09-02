@@ -55,8 +55,10 @@ export default class UserController {
         return res.status(401).json({ message: 'Senha inválida' });
       }
       const token = await authenticateUser.generateToken({
+        id: user.id,
         email: user.email,
         password: user.password,
+        admin: user.admin,
       });
 
       return res.status(200).json({
