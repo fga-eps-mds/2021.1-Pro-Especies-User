@@ -6,7 +6,7 @@ const userRoutes = Router();
 const userController = new UserController();
 
 userRoutes.post('/', (req: Request, res: Response) => {
-  userController.createUser(req.body, res);
+  userController.createUser(req, res);
 });
 
 userRoutes.get('/', (req: Request, res: Response) => {

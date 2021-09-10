@@ -3,23 +3,13 @@ import bcrypt from 'bcryptjs';
 import User from '../models/userModel';
 import AuthUser from '../middleware/authUser';
 
-interface IUser {
-  email: String;
-  password: String;
-  phone: String;
-  name: String;
-  state: String;
-  city: String;
-  admin: Boolean;
-}
-
 export default class UserController {
-  createUser = async (body: IUser, res: Response) => {
+  createUser = async (req: Request, res: Response) => {
     try {
-      await User.create(body);
-      return res.status(200).json(body);
+      await User.create(req.body);
+      return res.status(200).json(req.body);
     } catch (error) {
-      const { email, phone } = await body;
+      const { email, phone } = await req.body;
       if (await User.findOne({ email })) {
         return res.status(409).json({
           message: 'Email já cadastrado!',
