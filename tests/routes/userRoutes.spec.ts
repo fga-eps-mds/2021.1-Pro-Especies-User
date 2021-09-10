@@ -1,19 +1,18 @@
 import { Response, Request } from 'express';
+import bcrypt from 'bcryptjs';
+import AuthUser from '../../src/middleware/authUser';
 import UserController from '../../src/controllers/userController';
 import User from '../../src/models/userModel';
-
-// const request = require('supertest');
-// const userRoutes = require('../../src/routes/userRoutes');
 
 const userController = new UserController();
 const userMock = {
   _id: '3472417428',
-  email: 'batista@sugardaddy.com',
-  password: '12345678',
-  phone: 'String',
-  name: 'String',
-  state: 'String',
-  city: 'String',
+  email: 'natan@gmail.com',
+  password: '123',
+  phone: '56565777',
+  name: 'Jerson',
+  state: 'Goias',
+  city: 'Rio Verde',
   admin: true,
 };
 const mockResponse = () => {
@@ -28,31 +27,102 @@ describe('Test Create User function', () => {
   it('should get a statusCode 200', async () => {
     const mockRequest = {} as Request;
     mockRequest.body = {
-      email: 'String',
-      password: 'String',
-      phone: 'String',
-      name: 'String',
-      state: 'String',
-      city: 'String',
+      email: 'natan@gmail.com',
+      password: '123',
+      phone: '56565777',
+      name: 'Jerson',
+      state: 'Goias',
+      city: 'Rio Verde',
       admin: true,
     };
 
     const response = mockResponse();
+    User.findOne = jest.fn();
     jest
       .spyOn(User, 'create')
       .mockImplementationOnce(() => Promise.resolve({ id: 1 }));
     const res = await userController.createUser(mockRequest, response);
     expect(res.status).toHaveBeenCalledWith(200);
   });
+
+  it('should get a statusCode 409 if provided used email', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.body = {
+      email: 'natan@gmail.com',
+      password: '123',
+      name: 'Jerson',
+      state: 'Goias',
+      city: 'Rio Verde',
+      admin: true,
+    };
+
+    const response = mockResponse();
+    User.findOne = jest.fn().mockImplementationOnce(() => ({
+      select: jest.fn().mockResolvedValueOnce(userMock),
+    }));
+    const res = await userController.createUser(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(409);
+  });
+
+  it('should get a statusCode 409 if provided used phone', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.body = {
+      phone: '45645434',
+      password: '123',
+      name: 'Jerson',
+      state: 'Goias',
+      city: 'Rio Verde',
+      admin: true,
+    };
+
+    const response = mockResponse();
+    User.findOne = jest.fn().mockImplementationOnce(() => ({
+      select: jest.fn().mockResolvedValueOnce(userMock),
+    }));
+    const res = await userController.createUser(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(409);
+  });
+
+  it('should get a statusCode 400', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.body = {
+      email: 'natan@gmail.com',
+      password: '123',
+      phone: '56565777',
+      name: 'Jerson',
+      state: 'Goias',
+      city: 'Rio Verde',
+      admin: true,
+    };
+
+    const response = mockResponse();
+    jest
+      .spyOn(User, 'create')
+      .mockImplementationOnce(() =>
+        Promise.reject(Error('Usuário já existente!'))
+      );
+    const res = await userController.createUser(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(400);
+  });
 });
 
 describe('Test Get All Users function', () => {
   it('should get a statusCode 200', async () => {
     const response = mockResponse();
-    // jest.spyOn(User, "find").mockResolvedValue([userMock])
     User.find = jest.fn().mockResolvedValueOnce([userMock]);
     const res = await userController.getAllUsers(response);
     expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('should get a statusCode 500', async () => {
+    const response = mockResponse();
+    User.find = jest
+      .fn()
+      .mockImplementationOnce(() =>
+        Promise.reject(Error('Falha na requisição!'))
+      );
+    const res = await userController.getAllUsers(response);
+    expect(res.status).toHaveBeenCalledWith(500);
   });
 });
 
@@ -65,9 +135,43 @@ describe('Test Login function', () => {
     };
 
     const response = mockResponse();
-    User.findOne = jest.fn().mockResolvedValueOnce([userMock]);
+    User.findOne = jest.fn().mockImplementationOnce(() => ({
+      select: jest.fn().mockResolvedValueOnce(userMock),
+    }));
+    jest.spyOn(bcrypt, 'compare').mockImplementationOnce(() => true);
+    jest
+      .spyOn(AuthUser.prototype, 'generateToken')
+      .mockImplementationOnce(() => 'mockToken');
     const res = await userController.login(mockRequest, response);
-    console.log(res);
     expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('should get a statusCode 401', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.body = {
+      emailPhone: 'batista@sugardaddy.com',
+      password: '12345678',
+    };
+
+    const response = mockResponse();
+    User.findOne = jest.fn().mockImplementationOnce(() => ({
+      select: jest.fn().mockResolvedValueOnce(userMock),
+    }));
+    jest.spyOn(bcrypt, 'compare').mockImplementationOnce(() => false);
+    const res = await userController.login(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(401);
+  });
+
+  it('should get a statusCode 500', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.body = {
+      emailPhone: 'batista@sugardaddy.com',
+      password: '12345678',
+    };
+
+    const response = mockResponse();
+    User.findOne = jest.fn();
+    const res = await userController.login(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(500);
   });
 });

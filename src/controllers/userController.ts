@@ -6,20 +6,15 @@ import AuthUser from '../middleware/authUser';
 export default class UserController {
   createUser = async (req: Request, res: Response) => {
     try {
+      const { email, phone } = await req.body;
+      if ((await User.findOne({ email })) || (await User.findOne({ phone }))) {
+        return res.status(409).json({
+          message: `${email ? 'Email' : 'Número de telefone'} já cadastrado`,
+        });
+      }
       await User.create(req.body);
       return res.status(200).json(req.body);
     } catch (error) {
-      const { email, phone } = await req.body;
-      if (await User.findOne({ email })) {
-        return res.status(409).json({
-          message: 'Email já cadastrado!',
-        });
-      }
-      if (await User.findOne({ phone })) {
-        return res.status(409).json({
-          message: 'Número de telefone já cadastrado!',
-        });
-      }
       return res.status(400).json({
         message: 'Falha no sistema ao cadastrar, tente novamente!',
       });
@@ -31,7 +26,6 @@ export default class UserController {
       const data = await User.find({}, 'name email state city phone admin');
       return res.status(200).json(data);
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         message: 'Falha ao processar requisição',
       });
@@ -70,7 +64,7 @@ export default class UserController {
       });
     } catch (error) {
       return res
-        .status(400)
+        .status(500)
         .json({ message: 'Falha no sistema ao logar, tente novamente!' });
     }
   };
