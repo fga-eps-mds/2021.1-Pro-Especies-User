@@ -3,13 +3,23 @@ import bcrypt from 'bcryptjs';
 import User from '../models/userModel';
 import AuthUser from '../middleware/authUser';
 
+interface IUser {
+  email: String;
+  password: String;
+  phone: String;
+  name: String;
+  state: String;
+  city: String;
+  admin: Boolean;
+}
+
 export default class UserController {
-  createUser = async (req: Request, res: Response) => {
+  createUser = async (body: IUser, res: Response) => {
     try {
-      await User.create(req.body);
-      return res.status(200).json(req.body);
+      await User.create(body);
+      return res.status(200).json(body);
     } catch (error) {
-      const { email, phone } = await req.body;
+      const { email, phone } = await body;
       if (await User.findOne({ email })) {
         return res.status(409).json({
           message: 'Email já cadastrado!',
@@ -26,13 +36,13 @@ export default class UserController {
     }
   };
 
-  getAllUsers = async (req: Request, res: Response) => {
+  getAllUsers = async (res: Response) => {
     try {
       const data = await User.find({}, 'name email state city phone admin');
-      res.status(200).json(data);
+      return res.status(200).json(data);
     } catch (error) {
       console.log(error);
-      res.status(500).json({
+      return res.status(500).json({
         message: 'Falha ao processar requisição',
       });
     }
