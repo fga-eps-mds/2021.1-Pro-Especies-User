@@ -7,7 +7,7 @@
     "test": "jest",
     "start": "NODE_PATH=./build node build/index.js",
     "build": "tsc -p .",
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon src/server.ts",
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "repository": {
