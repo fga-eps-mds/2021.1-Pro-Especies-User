@@ -1,5 +1,5 @@
 # 2021.1-Pro-Especies-User
-
+[![codecov](https://codecov.io/gh/fga-eps-mds/2021.1-Pro-Especies-User/branch/devel/graph/badge.svg?token=JLZ77JFUU4)](https://codecov.io/gh/fga-eps-mds/2021.1-Pro-Especies-User)
 ## 1. Ambiente de desenvolvimento
 Para fazer uso do ambiente de desenvolvimento é necessário possuir dois pacotes instalados.
 * docker
