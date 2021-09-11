@@ -10,7 +10,7 @@ userRoutes.post('/', (req: Request, res: Response) => {
 });
 
 userRoutes.get('/', (req: Request, res: Response) => {
-  userController.getAllUsers(req, res);
+  userController.getAllUsers(res);
 });
 
 userRoutes.post('/login', (req: Request, res: Response) => {
