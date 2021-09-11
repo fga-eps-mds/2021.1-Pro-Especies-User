@@ -1,6 +1,7 @@
-name: Release
+name: Create a new Release
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
