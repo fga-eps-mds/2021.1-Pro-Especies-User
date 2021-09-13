@@ -2,8 +2,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
-##DataBase
+## DataBase
 userData/
+
+### Tests
+test-report.xml
 
 ### Node ###
 # Logs
