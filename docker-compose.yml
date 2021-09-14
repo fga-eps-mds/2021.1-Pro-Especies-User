@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   ts-node-docker:
@@ -9,19 +9,20 @@ services:
     volumes:
       - ./src:/home/node/app/src
       - ./nodemon.json:/home/node/app/nodemon.json
-    container_name: backend
+    container_name: proespecies-user
     expose:
-      - '4000'
+      - "4000"
     ports:
-      - '4000:4000'
+      - "4000:4000"
     command: npm run dev
   db:
-    container_name: mongoDB
+    container_name: mongoDBUser
     image: mongo:latest
     restart: always
     volumes:
-      - ./fishData:/data/db
+      - ./userData:/data/db
     environment:
-      - MONGO_INITDB_DATABASE=Fish
+      - MONGO_INITDB_DATABASE=User
+      - DATABASE_URL=mongodb://db/user
     ports:
-      - 27017:2017
+      - 27017:27017
