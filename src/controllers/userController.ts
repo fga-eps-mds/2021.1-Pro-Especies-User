@@ -12,7 +12,9 @@ export default class UserController {
           message: `${email ? 'Email' : 'Número de telefone'} já cadastrado`,
         });
       }
-      const user = await User.create(req.body);
+      const user = req.body;
+      await User.create(user);
+      user.password = undefined;
       return res.status(200).json(user);
     } catch (error) {
       return res.status(400).json({
