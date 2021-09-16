@@ -1,9 +1,9 @@
 name: Running Code Coverage
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
-  build:
+  run_test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -22,8 +22,9 @@ jobs:
     
     - name: Run the tests
       run: npm test -- --coverage
-    
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v2
-      with:
-          token: ${{ secrets.CODECOV_TOKEN_USER }}
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v1.4
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_API }}
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
