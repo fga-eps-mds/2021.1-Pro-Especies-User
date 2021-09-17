@@ -12,8 +12,10 @@ export default class UserController {
           message: `${email ? 'Email' : 'Número de telefone'} já cadastrado`,
         });
       }
-      await User.create(req.body);
-      return res.status(200).json(req.body);
+      const user = req.body;
+      await User.create(user);
+      user.password = undefined;
+      return res.status(200).json(user);
     } catch (error) {
       return res.status(400).json({
         message: 'Falha no sistema ao cadastrar, tente novamente!',
