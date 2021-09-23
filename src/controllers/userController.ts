@@ -13,8 +13,17 @@ export default class UserController {
         });
       }
       const user = req.body;
+      if (
+        user.admin &&
+        user.token !== process.env.RESEARCHER_CONFIRMATION_CODE
+      ) {
+        return res
+          .status(401)
+          .json({ message: 'Código de pesquisador invalido!' });
+      }
       await User.create(user);
       user.password = undefined;
+      user.token = undefined;
       return res.status(200).json(user);
     } catch (error) {
       return res.status(400).json({
