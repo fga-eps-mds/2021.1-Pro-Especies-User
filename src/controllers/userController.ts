@@ -7,9 +7,13 @@ export default class UserController {
   createUser = async (req: Request, res: Response) => {
     try {
       const { email, phone } = await req.body;
-      if ((await User.findOne({ email })) || (await User.findOne({ phone }))) {
+      const emailFind = await User.findOne({ email });
+      const phoneFind = await User.findOne({ phone });
+      if (emailFind || phoneFind) {
         return res.status(409).json({
-          message: `${email ? 'Email' : 'Número de telefone'} já cadastrado`,
+          message: `${
+            emailFind ? 'Email' : 'Número de telefone'
+          } já cadastrado`,
         });
       }
       const user = req.body;
