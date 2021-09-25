@@ -7,14 +7,27 @@ export default class UserController {
   createUser = async (req: Request, res: Response) => {
     try {
       const { email, phone } = await req.body;
-      if ((await User.findOne({ email })) || (await User.findOne({ phone }))) {
+      const emailFind = await User.findOne({ email });
+      const phoneFind = await User.findOne({ phone });
+      if (emailFind || phoneFind) {
         return res.status(409).json({
-          message: `${email ? 'Email' : 'Número de telefone'} já cadastrado`,
+          message: `${
+            emailFind ? 'Email' : 'Número de telefone'
+          } já cadastrado`,
         });
       }
       const user = req.body;
+      if (
+        user.admin &&
+        user.token !== process.env.RESEARCHER_CONFIRMATION_CODE
+      ) {
+        return res
+          .status(401)
+          .json({ message: 'Código de pesquisador invalido!' });
+      }
       await User.create(user);
       user.password = undefined;
+      user.token = undefined;
       return res.status(200).json(user);
     } catch (error) {
       return res.status(400).json({
