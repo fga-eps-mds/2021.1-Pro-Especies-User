@@ -75,6 +75,7 @@ export default class UserController {
         name: user.name,
         email: user.email,
         phone: user.phone,
+        admin: user.admin,
         token,
       });
     } catch (error) {
