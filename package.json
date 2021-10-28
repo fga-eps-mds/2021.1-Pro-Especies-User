@@ -14,6 +14,11 @@
     "type": "git",
     "url": "git+https://github.com/fga-eps-mds/2021.1-Pro-Especies-User.git"
   },
+  "jestSonar": {
+    "reportPath": "coverage",
+    "reportFile": "test-report.xml",
+    "indent": 4
+  },
   "author": "",
   "license": "ISC",
   "bugs": {
