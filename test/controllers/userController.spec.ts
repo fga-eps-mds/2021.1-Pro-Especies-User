@@ -24,6 +24,12 @@ const mockResponse = () => {
 };
 
 describe('Test Create User function', () => {
+  beforeEach(() => {
+    process.env = {
+      RESEARCHER_CONFIRMATION_CODE: 'mockCode',
+    };
+  });
+
   it('Should get a statusCode 200 when create a user with the right data', async () => {
     const mockRequest = {} as Request;
     mockRequest.body = {
@@ -34,6 +40,7 @@ describe('Test Create User function', () => {
       state: 'Goias',
       city: 'Rio Verde',
       admin: true,
+      token: 'mockCode',
     };
 
     const response = mockResponse();
@@ -54,6 +61,7 @@ describe('Test Create User function', () => {
       state: 'Goias',
       city: 'Rio Verde',
       admin: true,
+      token: 'mockCode',
     };
 
     const response = mockResponse();
@@ -73,6 +81,7 @@ describe('Test Create User function', () => {
       state: 'Goias',
       city: 'Rio Verde',
       admin: true,
+      token: 'mockCode',
     };
 
     const response = mockResponse();
@@ -81,6 +90,24 @@ describe('Test Create User function', () => {
     }));
     const res = await userController.createUser(mockRequest, response);
     expect(res.status).toHaveBeenCalledWith(409);
+  });
+
+  it('should get a statusCode 401 if provided researcher code is invalid', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.body = {
+      phone: '45645434',
+      password: '123',
+      name: 'Jerson',
+      state: 'Goias',
+      city: 'Rio Verde',
+      admin: true,
+      token: 'invalidCode',
+    };
+
+    const response = mockResponse();
+    User.findOne = jest.fn();
+    const res = await userController.createUser(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(401);
   });
 
   it('should get a statusCode 400 if request failed', async () => {
@@ -93,6 +120,7 @@ describe('Test Create User function', () => {
       state: 'Goias',
       city: 'Rio Verde',
       admin: true,
+      token: 'mockCode',
     };
 
     const response = mockResponse();

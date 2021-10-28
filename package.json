@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage",
-    "start": "NODE_PATH=./build node build/index.js",
+    "start": "NODE_PATH=./build node build/src/server.js",
     "build": "tsc -p .",
     "dev": "nodemon src/server.ts",
     "lint": "eslint \"**/*.{ts,tsx}\""
@@ -44,6 +44,7 @@
   "dependencies": {
     "@types/jsonwebtoken": "^8.5.5",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
