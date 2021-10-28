@@ -23,16 +23,8 @@ jobs:
     - name: Run the tests
       run: npm test -- --coverage
 
-    - name: Install tree
-      run: |
-        sudo apt-get install tree
-        tree
-
-    - name: Fix Path
-      run: python test_execution_path.py coverage/test-report.xml
-
-    - name: See files
-      run: tree
+    - name: See file
+      run: cat coverage/test-report.xml
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v1.4
