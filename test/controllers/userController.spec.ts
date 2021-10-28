@@ -23,7 +23,6 @@ const mockResponse = () => {
   return response;
 };
 
-
 describe('Test Create User function', () => {
   it('Should get a statusCode 200 when create a user with the right data', async () => {
     const mockRequest = {} as Request;
