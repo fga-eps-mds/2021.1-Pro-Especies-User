@@ -1,6 +1,11 @@
 name: ESLint
 
-on: [pull_request]
+on: 
+  pull_request:
+  push:
+    branches:
+      - devel
+      - main
 
 jobs:
   eslint:
